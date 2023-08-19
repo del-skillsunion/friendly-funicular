@@ -4,7 +4,9 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
-  region: ap-southeast-1
+  region: ap-southeast-1  
+  deploymentBucket:
+    name: cohort2.serverless.deploys
 
 functions:
   api:
@@ -13,6 +15,9 @@ functions:
       - httpApi:
           path: /
           method: get
+    environment:
+      ACCESS_INFORMATION: '34234'
+      ACCESS_KEY: ${ssm:ACCESS_KEY}
 
 plugins:
   - serverless-offline

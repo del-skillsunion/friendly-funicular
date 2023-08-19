@@ -30,9 +30,19 @@ jobs:
         run: npm install
       - name: Run unit testing command
         run: npm test
+  
+  package-scan:
+    runs-on: ubuntu-latest
+    needs: unit-testing
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Run installation of dependencies commands
+        run: npm install
+      - name: Run audit
+        run: npm audit
 
   deploy:
-    name: deploy
     runs-on: ubuntu-latest
     needs: unit-testing
     steps:
