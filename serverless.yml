@@ -1,4 +1,4 @@
-service: friendly-funicular
+service: friendly-funicular-${env:STAGE}
 frameworkVersion: '3'
 
 provider:
@@ -7,9 +7,11 @@ provider:
   region: ap-southeast-1  
   deploymentBucket:
     name: cohort2.serverless.deploys
+  environment:
+      STAGE: 'prod'
 
 functions:
-  api:
+  delffunction:
     handler: index.handler
     events:
       - httpApi:
@@ -18,6 +20,7 @@ functions:
     environment:
       ACCESS_INFORMATION: '34234'
       ACCESS_KEY: ${ssm:ACCESS_KEY}
+      STAGE: 'prod'
 
 plugins:
   - serverless-offline
