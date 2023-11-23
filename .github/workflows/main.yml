@@ -6,45 +6,51 @@ on:
     branches: [ main, "*" ]
 
 jobs:
-  # pre-deploy:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - run: echo "The job is automatically triggered by a ${{ github.event_name }} event."
+  pre-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "The job is automatically triggered by a ${{ github.event_name }} event."
 
-  # install-dependencies:
-  #   runs-on: ubuntu-latest
-  #   needs: pre-deploy
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v3
-  #     - name: Run installation of dependencies commands
-  #       run: npm install
+  install-dependencies:
+    runs-on: ubuntu-latest
+    needs: pre-deploy
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Run installation of dependencies commands
+        run: npm install
 
-  # unit-testing:
-  #   runs-on: ubuntu-latest
-  #   needs: install-dependencies
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v3
-  #     - name: Run installation of dependencies commands
-  #       run: npm install
-  #     - name: Run unit testing command
-  #       run: npm test
+  unit-testing:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Run installation of dependencies commands
+        run: npm install
+      - name: Run unit testing command
+        run: npm test
   
-  # package-scan:
-  #   runs-on: ubuntu-latest
-  #   needs: unit-testing
-  #   steps:
-  #     - name: Check out repository code
-  #       uses: actions/checkout@v3
-  #     - name: Run installation of dependencies commands
-  #       run: npm install
-  #     - name: Run audit
-  #       run: npm audit
+  package-scan:
+    runs-on: ubuntu-latest
+    needs: unit-testing
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: install Snyk CLI
+        run: npm install -g snyk
+      - name: Run installation of dependencies commands
+        run: npm install
+      - name: Run audit
+        run: npm audit
+      - name: run Snyk Open Source Test
+        run: snyk test
+      - name: run Snyk Code Test
+        run: snyk code test
 
   deploy:
     runs-on: ubuntu-latest
-    # needs: package-scan
+    needs: package-scan
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
